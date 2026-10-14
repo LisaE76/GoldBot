@@ -1,9 +1,40 @@
 """Alert delivery: Telegram (free) or SMS/WhatsApp through Twilio."""
+import re
+
 import requests
 
 
 def _split(value):
     return [v.strip() for v in (value or "").split(",") if v.strip()]
+
+
+def clean_token(raw):
+    """Forgive common paste mistakes: spaces/newlines, quotes, <>, a 'bot' prefix,
+    or a whole BotFather sentence around the token."""
+    pattern = r"\d{6,}:[A-Za-z0-9_-]{30,}"
+    m = re.search(pattern, raw or "")  # token surrounded by other words
+    if m:
+        return m.group(0)
+    t = re.sub(r"\s+", "", raw or "")  # token split by a stray line break
+    m = re.search(pattern, t)
+    if m:
+        return m.group(0)
+    t = t.strip("\"'<>`")
+    if t.lower().startswith("bot") and t[3:4].isdigit():
+        t = t[3:]
+    return t
+
+
+def clean_chat_ids(raw):
+    """Pull the numbers out of things like 'Id: 512345678' or '512 345 678'."""
+    out = []
+    for part in _split(raw):
+        m = re.search(r"-?\d[\d ]*", part)
+        if m:
+            out.append(m.group(0).replace(" ", "").strip())
+        elif part.startswith("@"):
+            out.append(part)
+    return out
 
 
 def send_sms(cfg, body):
@@ -22,10 +53,10 @@ def send_sms(cfg, body):
 
 
 def _send_telegram(s, body):
-    token = s.get("telegram_bot_token", "").strip()
+    token = clean_token(s.get("telegram_bot_token", ""))
     url = f"https://api.telegram.org/bot{token}/sendMessage"
     ok = True
-    for chat_id in _split(s.get("telegram_chat_id")):
+    for chat_id in clean_chat_ids(s.get("telegram_chat_id")):
         try:
             r = requests.post(url, data={"chat_id": chat_id, "text": body}, timeout=20)
             j = r.json()
