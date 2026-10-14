@@ -32,6 +32,9 @@ ENV_OVERRIDES = {
     "TWILIO_AUTH_TOKEN": ("sms", "auth_token"),
     "TWILIO_FROM": ("sms", "from_number"),
     "SMS_TO": ("sms", "to_numbers"),
+    "TELEGRAM_BOT_TOKEN": ("sms", "telegram_bot_token"),
+    "TELEGRAM_CHAT_ID": ("sms", "telegram_chat_id"),
+    "ALERT_PROVIDER": ("sms", "provider"),
     "DRY_RUN": ("sms", "dry_run"),
     "ACCOUNT_BALANCE": ("account", "balance"),
 }
@@ -222,7 +225,8 @@ def main():
     if args.test_sms:
         ok = send_sms(cfg, "XAUUSD signal bot connected. You'll get signals and news "
                            "alerts here. Not financial advice.")
-        print("Test text sent." if ok else "Test text FAILED - check Twilio details.")
+        print("Test message sent." if ok else
+              "Test message FAILED - check your Telegram bot token and chat ID.")
         raise SystemExit(0 if ok else 1)
     state_path = os.path.join(HERE, cfg["general"].get("state_file", "state.json"))
     interval = int(cfg["general"].get("check_interval_min", 15))

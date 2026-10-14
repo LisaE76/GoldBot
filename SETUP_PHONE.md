@@ -1,13 +1,19 @@
 # Run the bot from your phone (no computer)
 
-The bot runs free on GitHub's servers every 15 minutes (Mon-Fri) and texts
-you. You set it up once in your phone's web browser.
+The bot runs free on GitHub's servers every 15 minutes (Mon-Fri) and sends
+alerts to you on Telegram (free). You set it up once in your phone's browser.
 
 ## 1. Get your keys (if you haven't)
 - **Twelve Data** (prices): twelvedata.com -> sign up -> copy your API key.
-- **Twilio** (texts): twilio.com -> sign up -> copy Account SID, Auth Token,
-  and get a Twilio phone number. On the free trial, verify your own mobile
-  under "Verified Caller IDs" first.
+- **Telegram bot** (alerts):
+  1. Install Telegram and open a chat with **@BotFather** (blue tick).
+  2. Send `/newbot`, give it any name, then a username ending in `bot`
+     (e.g. `lisa_gold_signals_bot`).
+  3. BotFather replies with a **token** like `123456789:AAH...`. Copy it.
+  4. Tap the link BotFather gives to open your new bot and tap **Start**.
+     (The bot can't message you until you do this.)
+  5. Open a chat with **@userinfobot** and tap **Start**. It replies with
+     your **Id**, a number like `512345678`. Copy it; that's your chat ID.
 
 ## 2. Make a GitHub account and repository
 1. Go to github.com and sign up (free).
@@ -34,16 +40,14 @@ Repo -> **Settings** -> **Secrets and variables** -> **Actions** ->
 | Name | Value |
 |---|---|
 | `TWELVEDATA_API_KEY` | your Twelve Data key |
-| `TWILIO_ACCOUNT_SID` | starts with AC... |
-| `TWILIO_AUTH_TOKEN` | your Twilio auth token |
-| `TWILIO_FROM` | your Twilio number, e.g. +15551234567 |
-| `SMS_TO` | your mobile, e.g. +447700900000 |
+| `TELEGRAM_BOT_TOKEN` | the token from @BotFather |
+| `TELEGRAM_CHAT_ID` | your Id from @userinfobot |
 | `ACCOUNT_BALANCE` | your balance in £, e.g. 52 (update as it changes) |
 
 ## 5. Test it
 1. Repo -> **Actions** tab. If asked, tap **I understand... enable them**.
-2. Tap **XAUUSD signals** -> **Run workflow** -> tick **Send a test text**
-   -> **Run workflow**. You should get a text within a minute.
+2. Tap **XAUUSD signals** -> **Run workflow** -> tick **Send a test message**
+   -> **Run workflow**. Your bot should message you on Telegram within a minute.
 3. Run it again **without** the tick. Open the run -> **check** ->
    **Run bot** to see the gold price it read. "sent=0" just means no
    signal right now, which is normal.
@@ -53,12 +57,12 @@ That's it. It now runs every 15 minutes on weekdays.
 ## Good to know
 - **Timing:** GitHub sometimes starts scheduled runs 5-15 minutes late at
   busy times. The bot checks the last two bars so it doesn't miss signals,
-  but the price may have moved a little from the entry in the text.
+  but the price may have moved a little from the entry in the alert.
 - **Change settings:** edit `config.ini` in the repo (pencil icon), e.g.
   `risk_percent`, `max_risk_percent`, `skip_over_max`.
 - **Pause it:** Actions -> XAUUSD signals -> **...** -> **Disable workflow**.
-- **Twilio trial** texts start with "Sent from your Twilio trial account"
-  and use trial credit; upgrade when it runs low.
+- **Tip:** in Telegram, open your bot's chat -> name at top -> turn
+  notifications on, so signals make a sound.
 - GitHub pauses schedules on repos with no activity for 60 days. The bot
   saves its memory (state.json) whenever it sends an alert, which keeps it
   active, and GitHub emails you before pausing anything.
