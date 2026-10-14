@@ -1,0 +1,2 @@
+# GoldBot
+Gold Trading Bot
