@@ -8,10 +8,14 @@ on:
     - cron: "2,17,32,47 * * * 1-5"
   workflow_dispatch:
     inputs:
-      test_sms:
-        description: "Send a test message instead of checking for signals"
-        type: boolean
-        default: false
+      action:
+        description: "What to do"
+        type: choice
+        default: "Check for signals"
+        options:
+          - "Check for signals"
+          - "Send test message"
+          - "Setup check"
 
 permissions:
   contents: write
@@ -46,14 +50,16 @@ jobs:
           ACCOUNT_BALANCE: ${{ secrets.ACCOUNT_BALANCE }}
           DRY_RUN: "false"
         run: |
-          if [ "${{ inputs.test_sms }}" = "true" ]; then
+          if [ "${{ inputs.action }}" = "Setup check" ]; then
+            python setup_check.py
+          elif [ "${{ inputs.action }}" = "Send test message" ]; then
             python main.py --test-sms
           else
             python main.py --once
           fi
 
       - name: Save bot memory (open trade, alerts sent)
-        if: ${{ inputs.test_sms != true }}
+        if: ${{ !inputs.action || inputs.action == 'Check for signals' }}
         run: |
           git config user.name "signal-bot"
           git config user.email "signal-bot@users.noreply.github.com"
