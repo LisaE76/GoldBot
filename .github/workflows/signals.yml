@@ -17,6 +17,8 @@ on:
           - "Check for signals"
           - "Send test message"
           - "Setup check"
+          - "Run backtest"
+          
 
 permissions:
   contents: write
@@ -38,6 +40,7 @@ jobs:
           cache: pip
 
       - run: pip install -r requirements.txt
+      
 
       - name: Run bot
         env:
@@ -55,6 +58,9 @@ jobs:
             python setup_check.py
           elif [ "${{ inputs.action }}" = "Send test message" ]; then
             python main.py --test-sms
+          elif [ "${{ inputs.action }}" = "Run backtest" ]; then
+            python backtest.py --all
+            
           else
             python main.py --once
           fi
