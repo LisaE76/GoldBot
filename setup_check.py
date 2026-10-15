@@ -144,7 +144,7 @@ def run(cfg):
                 rep.todo(f"In Telegram, search @{bot_name}, tap Start and send 'hi'. "
                          f"Then run this Setup check again.")
     if all_ok:
-        rep.ok("Everything is set up. The bot will check gold every 15 minutes on weekdays.")
+        rep.ok("Everything is set up. The bot will check XAUUSD, GBPUSD and EURUSD on weekdays (5M, 1H and Daily).")
     rep.done()
 
 

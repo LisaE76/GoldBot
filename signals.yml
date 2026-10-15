@@ -1,17 +1,22 @@
-# GitHub Actions workflow: runs the XAUUSD bot every 15 minutes, Mon-Fri.
+# GitHub Actions workflow for the signal bot. Started every 5 minutes by
+# cron-job.org (see SETUP_PHONE.md); GitHub's own schedule below is a backup.
 # Must live at .github/workflows/signals.yml in your repository.
 name: XAUUSD signals
 
 on:
   schedule:
-    # Times are UTC. A couple of minutes after each 15-min bar closes.
-    - cron: "2,17,32,47 * * * 1-5"
+    # Backup only (UTC). GitHub often starts these late; the bot catches up.
+    - cron: "3,33 * * * 1-5"
   workflow_dispatch:
     inputs:
-      test_sms:
-        description: "Send a test message instead of checking for signals"
-        type: boolean
-        default: false
+      action:
+        description: "What to do"
+        type: choice
+        default: "Check for signals"
+        options:
+          - "Check for signals"
+          - "Send test message"
+          - "Setup check"
 
 permissions:
   contents: write
@@ -23,7 +28,7 @@ concurrency:
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
 
@@ -46,16 +51,22 @@ jobs:
           ACCOUNT_BALANCE: ${{ secrets.ACCOUNT_BALANCE }}
           DRY_RUN: "false"
         run: |
-          if [ "${{ inputs.test_sms }}" = "true" ]; then
+          if [ "${{ inputs.action }}" = "Setup check" ]; then
+            python setup_check.py
+          elif [ "${{ inputs.action }}" = "Send test message" ]; then
             python main.py --test-sms
           else
             python main.py --once
           fi
 
       - name: Save bot memory (open trade, alerts sent)
-        if: ${{ inputs.test_sms != true }}
+        if: ${{ !inputs.action || inputs.action == 'Check for signals' }}
         run: |
           git config user.name "signal-bot"
           git config user.email "signal-bot@users.noreply.github.com"
           git add state.json 2>/dev/null || true
-          git diff --cached --quiet || (git commit -m "Update bot state" && git push)
+          if ! git diff --cached --quiet; then
+            git commit -q -m "Update bot state"
+            git pull -q --rebase -X theirs || true
+            git push -q || echo "Could not save state this time; will retry next run."
+          fi

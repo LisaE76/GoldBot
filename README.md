@@ -1,4 +1,8 @@
-# XAUUSD Signal Bot
+# Signal Bot: XAUUSD, GBPUSD, EURUSD (5M, 1H and Daily)
+
+> Now watches three pairs on the 5-minute, 1-hour and daily charts, each giving its
+> own signals. Pairs and timeframes are set in `config.ini` (`symbols`,
+> `timeframes`). Backtest any of them: `python backtest.py --all`.
 
 Watches gold (XAU/USD) on the 15-minute chart, checks the economic calendar,
 and texts you BUY/SELL signals with entry, stop loss, two take-profits and a

@@ -1,6 +1,8 @@
 # Run the bot from your phone (no computer)
 
-The bot runs free on GitHub's servers every 15 minutes (Mon-Fri) and sends
+The bot watches XAUUSD, GBPUSD and EURUSD on the 5-minute, 1-hour and daily
+charts. It runs free on GitHub's servers, started every 5 minutes by
+cron-job.org (step 6), and sends
 alerts to you on Telegram (free). You set it up once in your phone's browser.
 
 ## 1. Get your keys (if you haven't)
@@ -46,18 +48,67 @@ Repo -> **Settings** -> **Secrets and variables** -> **Actions** ->
 
 ## 5. Test it
 1. Repo -> **Actions** tab. If asked, tap **I understand... enable them**.
-2. Tap **XAUUSD signals** -> **Run workflow** -> tick **Send a test message**
-   -> **Run workflow**. Your bot should message you on Telegram within a minute.
-3. Run it again **without** the tick. Open the run -> **check** ->
+2. Tap **XAUUSD signals** -> **Run workflow** -> under **What to do** choose
+   **Setup check** -> **Run workflow**. When it finishes, tap the run: the
+   result is shown at the top in plain words, with ✅/❌ and what to fix.
+   If all is well your bot messages you on Telegram.
+3. Run it again choosing **Check for signals**. Open the run -> **check** ->
    **Run bot** to see the gold price it read. "sent=0" just means no
    signal right now, which is normal.
 
-That's it. It now runs every 15 minutes on weekdays.
+## 6. Make it run every 5 minutes (needed for 5-min signals)
+GitHub's own timer only runs the bot about once an hour. cron-job.org (free)
+starts it every 5 minutes instead.
+
+**a) Make a GitHub access key (token)**
+1. Tap your profile picture (top right) -> **Settings** -> scroll to the
+   bottom -> **Developer settings** -> **Personal access tokens** ->
+   **Fine-grained tokens** -> **Generate new token**.
+2. Token name: `cron`. Expiration: the longest offered (e.g. 1 year).
+3. Repository access: **Only select repositories** -> pick `gold-bot`.
+4. Permissions -> **Repository permissions** -> **Actions** -> set to
+   **Read and write**.
+5. Tap **Generate token** and copy it (starts `github_pat_`). It's shown
+   only once. Keep it private.
+
+**b) Set up cron-job.org**
+1. Sign up free at **cron-job.org** and tap **Create cronjob**.
+2. **Title:** `gold bot`.
+3. **URL** (change YOUR_USERNAME to your GitHub username):
+   `https://api.github.com/repos/YOUR_USERNAME/gold-bot/actions/workflows/signals.yml/dispatches`
+4. **Execution schedule:** **Every 5 minutes**.
+5. Open the **Advanced** tab:
+   - **Request method:** `POST`
+   - **Headers** -> add these three:
+     - `Authorization` = `Bearer ` followed by your token (with a space
+       after Bearer)
+     - `Accept` = `application/vnd.github+json`
+     - `X-GitHub-Api-Version` = `2022-11-28`
+   - **Request body:** `{"ref":"main"}`
+6. Tap **Create** (or **Save**). Use **Test run**: a result of **204**
+   means it worked, and a new run appears in GitHub's Actions tab.
+   401 = token wrong; 404 = username/repo name or file path wrong;
+   403/422 = token is missing the Actions read-and-write permission.
+
+That's it. The bot now checks every 5 minutes, and sends a short
+"bot running" message each weekday morning from 07:00.
+
+**Good to know about the 5-minute chart**
+- 5-min signals only run 07:00-21:00 UK time on weekdays (change
+  `m5_hours` in config.ini). This keeps within the free data plan
+  (about 580 of the 800 daily requests are used).
+- 5-min signals come often (several a day across the three pairs). Spreads
+  matter a lot on small stops; the bot keeps stops at least 4x the spread.
+- The token expires on the date you chose. When it does, make a new one and
+  paste it into the cron-job.org Authorization header.
 
 ## Good to know
-- **Timing:** GitHub sometimes starts scheduled runs 5-15 minutes late at
-  busy times. The bot checks the last two bars so it doesn't miss signals,
-  but the price may have moved a little from the entry in the alert.
+- **Timing:** if a run is late, the bot catches up on bars it missed
+  (5-min signals older than 20 minutes are dropped as stale). A late signal says when it
+  formed and the price now, so check the price before entering.
+- **Pairs/timeframes:** edit `symbols` and `timeframes` in `config.ini`.
+- **Several trades at once:** each pair and timeframe signals separately,
+  so you can get several open signals together. Their risks add up.
 - **Change settings:** edit `config.ini` in the repo (pencil icon), e.g.
   `risk_percent`, `max_risk_percent`, `skip_over_max`.
 - **Pause it:** Actions -> XAUUSD signals -> **...** -> **Disable workflow**.

@@ -8,13 +8,20 @@ M15 = pd.Timedelta("15min")
 
 
 def fetch_twelvedata(api_key, symbol="XAU/USD", interval="15min", outputsize=5000):
-    r = requests.get(
-        "https://api.twelvedata.com/time_series",
-        params={"symbol": symbol, "interval": interval, "outputsize": outputsize,
-                "timezone": "UTC", "apikey": api_key, "order": "ASC"},
-        timeout=30,
-    )
-    j = r.json()
+    import time
+    for attempt in range(2):
+        r = requests.get(
+            "https://api.twelvedata.com/time_series",
+            params={"symbol": symbol, "interval": interval, "outputsize": outputsize,
+                    "timezone": "UTC", "apikey": api_key, "order": "ASC"},
+            timeout=30,
+        )
+        j = r.json()
+        # free plan allows 8 requests a minute; wait and retry once if hit
+        if j.get("code") == 429 and attempt == 0:
+            time.sleep(61)
+            continue
+        break
     if j.get("status") == "error" or "values" not in j:
         raise RuntimeError(f"Twelve Data error: {j.get('message', j)}")
     df = pd.DataFrame(j["values"])
@@ -47,9 +54,7 @@ def _clean(df):
     return df
 
 
-def drop_incomplete(df, now=None):
-    """Remove the last bar if it hasn't closed yet."""
+def drop_incomplete(df, bar=M15, now=None):
+    """Remove bars that haven't closed yet."""
     now = now or datetime.now(timezone.utc)
-    if len(df) and df.index[-1] + M15 > now:
-        return df.iloc[:-1]
-    return df
+    return df[df.index + bar <= now]
