@@ -71,7 +71,7 @@ def _session_ok(tf, close_time: pd.Timestamp) -> bool:
     return close_time.weekday() < 5
 
 
-MIN_FLOW = 3       # order-flow candles needed before the pullback (change this number)
+MIN_FLOW = 2       # order-flow candles needed before the pullback (change this number)
 MAX_PULLBACK = 3   # most pullback candles allowed before the continuation
 
 
