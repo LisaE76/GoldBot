@@ -1,19 +1,5 @@
 {
   "active": {
-    "XAU/USD|1day": {
-      "side": "SELL",
-      "tf": "1day",
-      "time": "2026-10-15T00:00:00+00:00",
-      "entry": 4101.66,
-      "sl": 4233.76,
-      "tp1": 3903.51,
-      "tp2": 3705.36,
-      "sl_dist": 132.10128747523595,
-      "confidence": "Medium",
-      "lots": 0.01,
-      "tp1_done": false,
-      "checked_to": "2026-10-23T20:00:00+00:00"
-    },
     "EUR/USD|1day": {
       "side": "SELL",
       "tf": "1day",
@@ -26,7 +12,7 @@
       "confidence": "Medium",
       "lots": 0.01,
       "tp1_done": false,
-      "checked_to": "2026-10-23T20:00:00+00:00"
+      "checked_to": "2026-10-26T04:00:00+00:00"
     }
   },
   "last_signal_time": null,
@@ -36,41 +22,105 @@
     "GBP|CPI y/y|2026-10-21T06:00:00+00:00"
   ],
   "last_eval": {
-    "XAU/USD|1h": "2026-10-23T20:00:00+00:00",
-    "GBP/USD|1h": "2026-10-23T20:00:00+00:00",
-    "EUR/USD|1h": "2026-10-23T20:00:00+00:00",
-    "XAU/USD|1day": "2026-10-23T00:00:00+00:00",
-    "GBP/USD|1day": "2026-10-23T00:00:00+00:00",
-    "EUR/USD|1day": "2026-10-23T00:00:00+00:00",
+    "XAU/USD|1h": "2026-10-26T04:00:00+00:00",
+    "GBP/USD|1h": "2026-10-26T04:00:00+00:00",
+    "EUR/USD|1h": "2026-10-26T04:00:00+00:00",
+    "XAU/USD|1day": "2026-10-26T00:00:00+00:00",
+    "GBP/USD|1day": "2026-10-26T00:00:00+00:00",
+    "EUR/USD|1day": "2026-10-26T00:00:00+00:00",
     "XAU/USD|5min": "2026-10-23T16:55:00+00:00",
     "GBP/USD|5min": "2026-10-23T16:55:00+00:00",
     "EUR/USD|5min": "2026-10-23T16:55:00+00:00"
   },
   "last_fetch": {
-    "XAU/USD|1h": "2026-10-23T20:18:06.072528+00:00",
-    "GBP/USD|1h": "2026-10-23T20:18:06.072528+00:00",
-    "EUR/USD|1h": "2026-10-23T20:18:06.072528+00:00",
-    "XAU/USD|1day": "2026-10-23T01:23:37.485703+00:00",
-    "GBP/USD|1day": "2026-10-23T01:23:37.485703+00:00",
-    "EUR/USD|1day": "2026-10-23T01:23:37.485703+00:00",
+    "XAU/USD|1h": "2026-10-26T04:29:52.731218+00:00",
+    "GBP/USD|1h": "2026-10-26T04:29:52.731218+00:00",
+    "EUR/USD|1h": "2026-10-26T04:29:52.731218+00:00",
+    "XAU/USD|1day": "2026-10-26T04:29:52.731218+00:00",
+    "GBP/USD|1day": "2026-10-26T04:29:52.731218+00:00",
+    "EUR/USD|1day": "2026-10-26T04:29:52.731218+00:00",
     "XAU/USD|5min": "2026-10-23T16:56:14.696785+00:00",
     "GBP/USD|5min": "2026-10-23T16:56:14.696785+00:00",
     "EUR/USD|5min": "2026-10-23T16:56:14.696785+00:00"
   },
   "news_cache": {
-    "fetched": "2026-10-23T20:18:06.072528+00:00",
+    "fetched": "2026-10-26T04:29:52.731218+00:00",
     "err": null,
     "events": [
       {
-        "title": "CPI y/y",
+        "title": "Annual Budget Release",
         "currency": "GBP",
         "impact": "High",
-        "forecast": "3.4%",
-        "previous": "3.1%",
-        "time": "2026-10-21T06:00:00+00:00"
+        "forecast": "",
+        "previous": "",
+        "time": "2026-10-28T12:30:00+00:00"
+      },
+      {
+        "title": "Federal Funds Rate",
+        "currency": "USD",
+        "impact": "High",
+        "forecast": "4.00%",
+        "previous": "4.00%",
+        "time": "2026-10-28T18:00:00+00:00"
+      },
+      {
+        "title": "FOMC Statement",
+        "currency": "USD",
+        "impact": "High",
+        "forecast": "",
+        "previous": "",
+        "time": "2026-10-28T18:00:00+00:00"
+      },
+      {
+        "title": "FOMC Press Conference",
+        "currency": "USD",
+        "impact": "High",
+        "forecast": "",
+        "previous": "",
+        "time": "2026-10-28T18:30:00+00:00"
+      },
+      {
+        "title": "Advance GDP q/q",
+        "currency": "USD",
+        "impact": "High",
+        "forecast": "3.2%",
+        "previous": "1.5%",
+        "time": "2026-10-29T12:30:00+00:00"
+      },
+      {
+        "title": "Core PCE Price Index m/m",
+        "currency": "USD",
+        "impact": "High",
+        "forecast": "0.3%",
+        "previous": "0.2%",
+        "time": "2026-10-29T12:30:00+00:00"
+      },
+      {
+        "title": "Main Refinancing Rate",
+        "currency": "EUR",
+        "impact": "High",
+        "forecast": "2.65%",
+        "previous": "2.65%",
+        "time": "2026-10-29T13:15:00+00:00"
+      },
+      {
+        "title": "Monetary Policy Statement",
+        "currency": "EUR",
+        "impact": "High",
+        "forecast": "",
+        "previous": "",
+        "time": "2026-10-29T13:15:00+00:00"
+      },
+      {
+        "title": "ECB Press Conference",
+        "currency": "EUR",
+        "impact": "High",
+        "forecast": "",
+        "previous": "",
+        "time": "2026-10-29T13:45:00+00:00"
       }
     ]
   },
   "last_heartbeat": "2026-10-23",
-  "fx_rate": 1.33724
+  "fx_rate": 1.33819
 }
